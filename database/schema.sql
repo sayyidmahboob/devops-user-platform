@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS feature_flags (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    feature_name TEXT UNIQUE,
+    enabled BOOLEAN
+);

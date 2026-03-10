@@ -60,7 +60,6 @@
         .hero h1 {
             font-size: 52px;
             margin-bottom: 20px;
-            line-height: 1.1;
         }
 
         .hero p {
@@ -82,7 +81,6 @@
             border-radius: 8px;
             color: white;
             cursor: pointer;
-            font-size: 15px;
         }
 
         .secondary {
@@ -119,7 +117,40 @@
         .card p {
             color: #9ca3af;
             font-size: 14px;
-            line-height: 1.6;
+        }
+
+        /* FEATURE FLAG DEMO */
+
+        .feature-control {
+            max-width: 700px;
+            margin: 80px auto;
+            background: #111827;
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid #1f2937;
+            text-align: center;
+        }
+
+        .feature-control h2 {
+            margin-bottom: 15px;
+        }
+
+        .feature-control p {
+            color: #94a3b8;
+        }
+
+        .status {
+            margin: 20px 0;
+            font-weight: 500;
+        }
+
+        .toggle-btn {
+            padding: 12px 26px;
+            border: none;
+            border-radius: 8px;
+            background: #22c55e;
+            color: white;
+            cursor: pointer;
         }
 
         /* FOOTER */
@@ -139,50 +170,34 @@
     <div class="navbar">
 
         <div class="logo">
-
             DevOps Platform
-
         </div>
 
         <div class="nav-actions">
-
             <button onclick="location.href='login.html'">
-
                 Login
-
             </button>
-
         </div>
 
     </div>
 
     <section class="hero">
 
-        <h1>
-
-            Build. Test. Deploy.
-
-        </h1>
+        <h1>Build. Test. Deploy.</h1>
 
         <p>
-
             A DevOps simulation platform demonstrating user onboarding,
             automated testing pipelines and workflow automation.
-
         </p>
 
         <div class="cta">
 
             <button class="primary" onclick="location.href='signup.html'">
-
                 Get Started
-
             </button>
 
             <button class="secondary" onclick="location.href='login.html'">
-
                 Login
-
             </button>
 
         </div>
@@ -196,10 +211,8 @@
             <h3>User Authentication</h3>
 
             <p>
-
                 Secure signup, login and OTP based authentication
                 to simulate modern onboarding systems.
-
             </p>
 
         </div>
@@ -209,10 +222,8 @@
             <h3>Automated Tests</h3>
 
             <p>
-
                 30 automated test cases validating system stability
                 before deploying new features.
-
             </p>
 
         </div>
@@ -237,10 +248,33 @@
             <p>
 
                 n8n workflows automating reporting,
+
                 issue creation and pipeline monitoring.
 
             </p>
 
+        </div>
+
+    </section>
+
+    <section class="feature-control">
+
+        <h2>Feature Flag Demo</h2>
+
+        <p>
+            Toggle feature deployment to simulate DevOps release control.
+        </p>
+
+        <div class="status">
+            Feature Status: <span id="featureStatus">Disabled</span>
+        </div>
+
+        <button class="toggle-btn" onclick="toggleFeature()">
+            Toggle Feature
+        </button>
+
+        <div style="margin-top:20px;color:#9ca3af;">
+            Pipeline Status: <span id="pipelineStatus">Waiting</span>
         </div>
 
     </section>
@@ -250,6 +284,70 @@
         DevOps User Platform • Simulation Project
 
     </div>
+
+    <script>
+
+        async function toggleFeature() {
+
+            try {
+
+                const response = await fetch(
+                    "http://127.0.0.1:8000/toggle-feature",
+                    {
+                        method: "POST"
+                    })
+
+                const data = await response.json()
+
+                const status = document.getElementById("featureStatus")
+                const pipeline = document.getElementById("pipelineStatus")
+
+                status.innerText = data.enabled ? "Enabled" : "Disabled"
+
+                pipeline.innerText = data.enabled
+                    ? "Tests Passed → Feature Live"
+                    : "Feature Disabled"
+
+            } catch (error) {
+
+                console.error("Feature toggle failed", error)
+
+                alert("Backend server not reachable. Start FastAPI server.")
+
+            }
+
+        }
+
+        async function loadFeatureStatus() {
+
+            try {
+
+                const response = await fetch(
+                    "http://127.0.0.1:8000/feature-status"
+                )
+
+                const data = await response.json()
+
+                const status = document.getElementById("featureStatus")
+                const pipeline = document.getElementById("pipelineStatus")
+
+                status.innerText = data.enabled ? "Enabled" : "Disabled"
+
+                pipeline.innerText = data.enabled
+                    ? "Tests Passed → Feature Live"
+                    : "Feature Disabled"
+
+            } catch (error) {
+
+                console.log("Could not fetch feature status")
+
+            }
+
+        }
+
+        loadFeatureStatus()
+
+    </script>
 
 </body>
 
